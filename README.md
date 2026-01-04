@@ -2,10 +2,13 @@
 
 A modern, production-ready portfolio website built with **Node.js**, **Express.js**, **React**, and **Tailwind CSS**. This portfolio features a clean, professional design with dark mode support, smooth animations, and a fully functional contact form.
 
+> **🌐 Now Deployable to IPFS!** This portfolio is configured for automatic deployment to decentralized hosting via [PinMe](https://pinme.eth.limo/). Get your professional portfolio at `yourname.pinit.eth.limo` for free! See [PINME_QUICKSTART.md](./PINME_QUICKSTART.md)
+
 ![Portfolio Preview](https://img.shields.io/badge/React-19.2.0-61DAFB?style=for-the-badge&logo=react)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.1-38B2AC?style=for-the-badge&logo=tailwind-css)
 ![Express](https://img.shields.io/badge/Express-4.18-000000?style=for-the-badge&logo=express)
+![IPFS](https://img.shields.io/badge/IPFS-Enabled-65C2CB?style=for-the-badge&logo=ipfs)
 
 ## ✨ Features
 
@@ -78,7 +81,42 @@ npm run build
 
 This creates an optimized production build in the `build/` folder.
 
-### 🌐 Deploy to GitHub Pages
+### 🌐 Deploy to IPFS via PinMe (Recommended)
+
+**PinMe** provides decentralized hosting on IPFS with custom ENS domains:
+
+#### Why PinMe?
+- ✅ **Free & Decentralized** - No hosting fees, distributed globally
+- ✅ **Professional URLs** - Get `yourname.pinit.eth.limo` domain
+- ✅ **Permanent** - Content-addressed storage won't disappear
+- ✅ **Automatic** - GitHub Actions deploys on every push
+- ✅ **Fast** - Global CDN-like distribution
+- ✅ **Tamper-Proof** - Immutable content addressing
+
+#### Quick Setup
+
+1. **Get Your AppKey**
+   - Visit [https://pinme.eth.limo/](https://pinme.eth.limo/)
+   - Connect your wallet
+   - Copy your AppKey
+
+2. **Configure GitHub Secrets**
+   - Go to **Settings** → **Secrets** → **Actions**
+   - Add `PINME_APPKEY` with your AppKey
+   - Add `PINME_DOMAIN` (e.g., `jpcabaluna-portfolio`)
+
+3. **Deploy**
+   ```bash
+   git add .
+   git commit -m "Deploy to IPFS"
+   git push origin main
+   ```
+
+Your site will automatically deploy to `https://your-domain.pinit.eth.limo`!
+
+📖 **Full guide:** See [PINME_DEPLOYMENT.md](./PINME_DEPLOYMENT.md)
+
+### 📄 Deploy to GitHub Pages
 
 1. **Update `package.json`** - Add your repository URL:
    ```json

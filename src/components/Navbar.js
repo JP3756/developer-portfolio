@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaBars, FaTimes, FaMoon, FaSun } from 'react-icons/fa';
+import { FaBars, FaTimes, FaMoon, FaSun, FaDownload } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import { portfolioData } from '../data/portfolioData';
 
@@ -47,7 +47,7 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
             {portfolioData.navigation.map((item) => (
               <a
                 key={item.name}
@@ -61,6 +61,17 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
+            
+            {/* Resume Button */}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              <FaDownload className="text-xs" />
+              Resume
+            </a>
             
             {/* Theme Toggle */}
             <button
@@ -103,7 +114,7 @@ const Navbar = () => {
         {/* Mobile Menu */}
         <div
           className={`md:hidden transition-all duration-300 ease-in-out ${
-            isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+            isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
           }`}
         >
           <div className="py-4 space-y-4">
@@ -121,6 +132,17 @@ const Navbar = () => {
                 {item.name}
               </a>
             ))}
+            
+            {/* Mobile Resume Button */}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              <FaDownload className="text-xs" />
+              Download Resume
+            </a>
           </div>
         </div>
       </div>

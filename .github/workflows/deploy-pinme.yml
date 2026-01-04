@@ -1,0 +1,79 @@
+name: Deploy to PinMe (IPFS)
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      domain:
+        description: 'PinMe domain name (e.g., jpcabaluna-portfolio)'
+        required: false
+        default: 'jpcabaluna-portfolio'
+      build_dir:
+        description: 'Build directory'
+        required: false
+        default: 'build'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🏗️ Build project
+        run: npm run build
+        env:
+          CI: false
+
+      - name: 🌐 Install PinMe CLI
+        run: npm install -g pinme
+
+      - name: 🔐 Authenticate with PinMe
+        run: pinme set-appkey "${{ secrets.PINME_APPKEY }}"
+
+      - name: 🚀 Deploy to IPFS via PinMe
+        id: deploy
+        run: |
+          DOMAIN="${{ github.event.inputs.domain || secrets.PINME_DOMAIN || 'jpcabaluna-portfolio' }}"
+          BUILD_DIR="${{ github.event.inputs.build_dir || 'build' }}"
+          
+          echo "Deploying ${BUILD_DIR} to domain: ${DOMAIN}"
+          
+          # Upload and bind to domain
+          pinme upload "./${BUILD_DIR}" --domain "${DOMAIN}"
+          
+          echo "::notice::Successfully deployed to PinMe!"
+          echo "::notice::Visit your site at: https://${DOMAIN}.pinit.eth.limo"
+          
+          # Save the domain for the summary
+          echo "domain=${DOMAIN}" >> $GITHUB_OUTPUT
+
+      - name: 📝 Deployment Summary
+        run: |
+          DOMAIN="${{ steps.deploy.outputs.domain }}"
+          echo "## 🎉 Deployment Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Your portfolio has been deployed to IPFS via PinMe!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Access URLs" >> $GITHUB_STEP_SUMMARY
+          echo "- **Primary:** https://${DOMAIN}.pinit.eth.limo" >> $GITHUB_STEP_SUMMARY
+          echo "- **Alternative:** https://${DOMAIN}.pinit.eth.link" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ℹ️ Deployment Info" >> $GITHUB_STEP_SUMMARY
+          echo "- **Domain:** ${DOMAIN}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Build Directory:** build/" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deployed At:** $(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Your site is now live on IPFS and accessible worldwide!" >> $GITHUB_STEP_SUMMARY
