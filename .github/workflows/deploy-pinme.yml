@@ -45,13 +45,25 @@ jobs:
       - name: 🚀 Deploy to IPFS via PinMe
         id: deploy
         run: |
-          DOMAIN="${{ github.event.inputs.domain || secrets.PINME_DOMAIN || 'jpcabaluna-portfolio' }}"
+          DOMAIN="${{ github.event.inputs.domain || secrets.PINME_DOMAIN }}"
           BUILD_DIR="${{ github.event.inputs.build_dir || 'build' }}"
           
-          echo "Deploying ${BUILD_DIR} to domain: ${DOMAIN}"
+          echo "Deploying ${BUILD_DIR}"
           
-          # Upload and bind to domain
-          pinme upload "./${BUILD_DIR}" --domain "${DOMAIN}"
+          # Upload to IPFS
+          if [ -z "$DOMAIN" ]; then
+            echo "Deploying without custom domain..."
+            OUTPUT=$(pinme upload "./${BUILD_DIR}")
+          else
+            echo "Deploying to domain: ${DOMAIN}"
+            OUTPUT=$(pinme upload "./${BUILD_DIR}" --domain "${DOMAIN}")
+          fi
+          
+          echo "$OUTPUT"
+          
+          # Extract domain from output
+          DEPLOYED_DOMAIN=$(echo "$OUTPUT" | grep -oP 'https://\K[^.]+(?=\.pinit\.eth)' || echo "deployed")
+          echo "domain=${DEPLOYED_DOMAIN}" >> $GITHUB_OUTPUT
           
           echo "::notice::Successfully deployed to PinMe!"
           echo "::notice::Visit your site at: https://${DOMAIN}.pinit.eth.limo"
