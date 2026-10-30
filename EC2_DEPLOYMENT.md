@@ -23,7 +23,8 @@ cd ~
 git clone https://github.com/JP3756/developer-portfolio.git || true
 cd developer-portfolio
 npm ci
-npm run build
+free -h
+NODE_OPTIONS=--max-old-space-size=384 npm run build
 sudo npm install --global pm2
 PORT=5000 NODE_ENV=production pm2 start server.js --name portfolio
 pm2 save
