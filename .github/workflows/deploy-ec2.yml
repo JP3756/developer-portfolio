@@ -62,7 +62,7 @@ jobs:
             rm -f /tmp/portfolio-release/release.tar.gz
             cd "$APP_DIR"
             npm ci --omit=dev
-            command -v pm2 >/dev/null 2>&1 || npm install --global pm2
+            command -v pm2 >/dev/null 2>&1 || sudo npm install --global pm2
             pm2 delete portfolio 2>/dev/null || true
             PORT="$APP_PORT" NODE_ENV=production pm2 start server.js --name portfolio
             pm2 save
