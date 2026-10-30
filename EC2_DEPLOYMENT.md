@@ -1,6 +1,37 @@
 # AWS EC2 Deployment
 
-The `Deploy to AWS EC2` GitHub Actions workflow builds the React app and deploys the Express server to an EC2 instance over SSH.
+For this trial project, deploy manually through the Lightsail browser SSH console. The GitHub Actions workflow is retained for later, but is manual-only until GitHub SSH secrets are configured.
+
+## Simple trial deployment
+
+Open your Lightsail instance and click **Connect using SSH**, then run these commands one at a time:
+
+```bash
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs git curl
+cd ~
+git clone https://github.com/JP3756/developer-portfolio.git
+cd developer-portfolio
+npm ci
+npm run build
+sudo npm install --global pm2
+PORT=5000 NODE_ENV=production pm2 start server.js --name portfolio
+pm2 save
+```
+
+In Lightsail **Networking**, add a custom TCP firewall rule for port `5000`, then open `http://YOUR_PUBLIC_IP:5000` in a browser.
+
+To update the trial deployment later:
+
+```bash
+cd ~/developer-portfolio
+git pull
+npm ci
+npm run build
+pm2 restart portfolio
+```
+
+The commands below document the future automated setup.
 
 ## EC2 setup
 
