@@ -7,8 +7,10 @@ For this trial project, deploy manually through the Lightsail browser SSH consol
 Open your Lightsail instance and click **Connect using SSH**, then run these commands one at a time:
 
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs git curl
+sudo apt-get update
+sudo apt-get install -y nodejs npm git curl
+node --version
+npm --version
 cd ~
 git clone https://github.com/JP3756/developer-portfolio.git
 cd developer-portfolio
@@ -17,6 +19,13 @@ npm run build
 sudo npm install --global pm2
 PORT=5000 NODE_ENV=production pm2 start server.js --name portfolio
 pm2 save
+```
+
+If the `npm --version` command says that npm is not found, run this and check again:
+
+```bash
+sudo apt-get install --reinstall -y npm
+npm --version
 ```
 
 In Lightsail **Networking**, add a custom TCP firewall rule for port `5000`, then open `http://YOUR_PUBLIC_IP:5000` in a browser.
