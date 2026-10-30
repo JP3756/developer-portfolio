@@ -7,6 +7,11 @@ For this trial project, deploy manually through the Lightsail browser SSH consol
 Open your Lightsail instance and click **Connect using SSH**, then run these commands one at a time:
 
 ```bash
+sudo fallocate -l 2G /swapfile
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+echo '/swapfile swap swap defaults 0 0' | sudo tee -a /etc/fstab
 sudo dpkg --configure -a
 sudo apt-get --fix-broken install -y
 sudo apt-get update
